@@ -5,9 +5,14 @@
 package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.PremierLeague.db.PremierLeagueDAO;
+import it.polito.tdp.PremierLeague.model.Arco;
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,6 +23,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 	
 	private Model model;
+	PremierLeagueDAO dao = new PremierLeagueDAO();
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -35,7 +41,7 @@ public class FXMLController {
     private Button btnSimula; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbSquadra"
-    private ComboBox<?> cmbSquadra; // Value injected by FXMLLoader
+    private ComboBox<Team> cmbSquadra; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtN"
     private TextField txtN; // Value injected by FXMLLoader
@@ -48,11 +54,37 @@ public class FXMLController {
 
     @FXML
     void doClassifica(ActionEvent event) {
+    	
+    	Team t = cmbSquadra.getValue();
+    	
+    	List<Arco> migliori = model.SquadreMigliori(t.getTeamID());
+    	List<Arco> peggiori = model.SquadrePeggiori(t.getTeamID());
+    	
+    	Collections.sort(migliori);
+    	Collections.sort(peggiori);
+    	
+    	txtResult.clear();
+    	
+    	txtResult.appendText("SQUADRE MIGLIORI : "+"\n");
+    	txtResult.appendText(""+migliori.toString());
+    	txtResult.appendText("\n");
+    	txtResult.appendText("SQUADRE PEGGIORI : "+"\n");
+    	txtResult.appendText(""+peggiori.toString());
 
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	
+    	model.creaGrafo();
+    	
+    	txtResult.appendText("Grafo creato con "+"\n");
+    	txtResult.appendText(" #"+model.nVertici()+" vertici");
+    	txtResult.appendText(" #"+model.nArchi()+" archi");
+    	
+    	for(Team t : dao.listAllTeams()) {
+    		cmbSquadra.getItems().add(t);
+    	}
 
     }
 

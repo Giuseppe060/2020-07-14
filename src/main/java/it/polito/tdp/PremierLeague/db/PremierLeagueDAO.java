@@ -112,4 +112,56 @@ public class PremierLeagueDAO {
 		}
 	}
 	
+	public List<Integer> listaRisultatiInCasa( int squadra ){
+		String sql = "SELECT m.ResultOfTeamHome "
+				+ "FROM matches m "
+				+ "WHERE m.TeamHomeID = ? ";
+		List<Integer> result = new ArrayList<>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, squadra);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				
+				int i = res.getInt("m.ResultOfTeamHome");
+				result.add(i);
+				
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public List<Integer> listaRisultatiInTrasferta( int squadra ){
+		String sql = "SELECT m.ResultOfTeamHome "
+				+ "FROM matches m "
+				+ "WHERE m.TeamAwayID = ? ";
+		List<Integer> result = new ArrayList<>();
+		Connection conn = DBConnect.getConnection();
+
+		try {
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, squadra);
+			ResultSet res = st.executeQuery();
+			while (res.next()) {
+				
+				int i = res.getInt("m.ResultOfTeamHome");
+				result.add(i);
+				
+			}
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }
